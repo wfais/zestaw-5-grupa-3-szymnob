@@ -53,31 +53,99 @@ def shell_sort(array: MonitorowanaTablica):
 
 
 def merge_sort(array: MonitorowanaTablica, left=None, right=None):
-# twoj kod
-    pass
+    if left is None:
+        left = 0
+    if right is None:
+        right = len(array) - 1
+
+    if left < right:
+        middle = (left + right) // 2
+        merge_sort(array, left, middle)
+        merge_sort(array, middle + 1, right)
+        merge(array, left, middle, right)
 
 
-def merge(array: MonitorowanaTablica, left, middle, right):
+def merge(array: MonitorowanaTablica, left, mid, right):
     """Merges two sorted subarrays."""
-    # twoj kod, moze sie przydac
-    pass
+    T = [None] * (right - left + 1)
+    left1 = left
+    right1 = mid
+    left2 = mid + 1
+    right2 = right
+    i = 0
+
+    while left1 <= right1 and left2 <= right2:
+        if array[left1] <= array[left2]:
+            T[i] = array[left1]
+            left1 += 1
+        else:
+            T[i] = array[left2]
+            left2 += 1
+        i += 1
+
+    while left1 <= right1:
+        T[i] = array[left1]
+        left1 += 1
+        i += 1
+
+    while left2 <= right2:
+        T[i] = array[left2]
+        left2 += 1
+        i += 1
+
+    for i in range(right - left + 1):
+        array[left + i] = T[i]
 
 
 def quick_sort(array: MonitorowanaTablica, left=None, right=None):
     """Performs quick sort on the given array."""
-    # twoj kod
-    pass
+    if right is None:
+        right = len(array) - 1
+
+    if left is None:
+        left = 0
+
+    if left >= right:
+        return
+
+    pivot = partition(array, left, right)
+    quick_sort(array, left, pivot - 1)
+    quick_sort(array, pivot + 1, right)
+
 
 
 def partition(array: MonitorowanaTablica, left, right):
     """Partitions the array into two parts."""
-    # twoj kod, moze sie przydac
-    pass
+    pivot = array[right]
+    i = left - 1
+    for j in range(left, right):
+        if array[j] <= pivot:
+            i += 1
+            array[i], array[j] = array[j], array[i]
+    array[i + 1], array[right] = array[right], array[i + 1]
+    return i + 1
 
 
 def tim_sort(array: MonitorowanaTablica):
-# twoj kod
-    pass
+    n = len(array)
+
+    run_size = 32
+
+    for start in range(0, n, run_size):
+        end = min(start + run_size - 1, n - 1)
+        insertion_sort(array, start, end)
+
+    # Step 2: Merge sorted chunks
+    size = run_size
+    while size < n:
+        for left in range(0, n, 2 * size):
+            mid = min(left + size - 1, n - 1)
+            right = min(left + 2 * size - 1, n - 1)
+
+            if mid < right:
+                merge(array, left, mid, right)
+
+        size *= 2
 
 
 
@@ -85,7 +153,7 @@ algorytmy = [
     (insertion_sort, "Insertion Sort"),
     (bubble_sort, "Bubble Sort"),
     (shell_sort, "Shell Sort"),
-    # (merge_sort, "Merge Sort"),
-    # (quick_sort, "Quick Sort"),
-    # (tim_sort, "Tim Sort"),
+    (merge_sort, "Merge Sort"),
+    (quick_sort, "Quick Sort"),
+    (tim_sort, "Tim Sort"),
 ]
