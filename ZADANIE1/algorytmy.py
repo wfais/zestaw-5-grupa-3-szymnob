@@ -127,8 +127,25 @@ def partition(array: MonitorowanaTablica, left, right):
 
 
 def tim_sort(array: MonitorowanaTablica):
-    # twoj kod
-        pass
+    n = len(array)
+
+    run_size = 32
+
+    for start in range(0, n, run_size):
+        end = min(start + run_size - 1, n - 1)
+        insertion_sort(array, start, end)
+
+    # Step 2: Merge sorted chunks
+    size = run_size
+    while size < n:
+        for left in range(0, n, 2 * size):
+            mid = min(left + size - 1, n - 1)
+            right = min(left + 2 * size - 1, n - 1)
+
+            if mid < right:
+                merge(array, left, mid, right)
+
+        size *= 2
 
 
 
